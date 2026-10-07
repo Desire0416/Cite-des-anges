@@ -40,8 +40,8 @@ export function safeEqual(a: Uint8Array, b: Uint8Array) {
   return diff === 0;
 }
 
-export function adminConfigured() {
-  return Boolean(process.env.ADMIN_DEMO_PASSWORD && getSecret());
+export function sessionSecretConfigured() {
+  return Boolean(getSecret());
 }
 
 export async function createSessionToken(session: Omit<Session, "exp">) {
@@ -66,13 +66,4 @@ export async function verifySessionToken(token: string | undefined): Promise<Ses
   } catch {
     return null;
   }
-}
-
-/** Vérifie le mot de passe de démonstration sans fuite de durée. */
-export async function checkPassword(candidate: string) {
-  const expected = process.env.ADMIN_DEMO_PASSWORD;
-  const secret = getSecret();
-  if (!expected || !secret) return false;
-  const [a, b] = await Promise.all([sign(candidate, secret), sign(expected, secret)]);
-  return safeEqual(a, b);
 }

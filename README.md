@@ -56,7 +56,17 @@ Voir `.env.example`. Points importants :
 - `NEXT_PUBLIC_WHATSAPP_NUMBER` : le bouton WhatsApp n’apparaît que si ce numéro est renseigné (après confirmation de la direction).
 - `NEXT_PUBLIC_DIRECTIONS_URL` : le bouton « Voir l’itinéraire » n’apparaît qu’après vérification du point exact.
 - `NEXT_PUBLIC_SITE_INDEXABLE=true` autorise l’indexation (à activer uniquement sur le domaine définitif).
-- `ADMIN_DEMO_PASSWORD` et `SESSION_SECRET` (32 caractères minimum) activent l’aperçu `/admin`. Le fichier `.env.local` contient des valeurs générées pour la démonstration locale ; il n’est pas versionné.
+- `ADMIN_ACCOUNTS` et `SESSION_SECRET` (32 caractères minimum) activent l’espace `/admin`. Chaque compte s’écrit `identifiant:Nom:role:sel:empreinte` (séparés par `;`) ; les mots de passe ne sont jamais stockés en clair.
+
+### Comptes de l’espace de gestion
+
+Créer ou renouveler un compte :
+
+```bash
+npm run admin:compte -- direction Direction administrateur
+```
+
+Le script affiche l’entrée à placer dans `ADMIN_ACCOUNTS` et le mot de passe généré, à remettre à la personne concernée. Pour retirer un accès, supprimer son entrée puis redéployer. Ces comptes provisoires seront remplacés par des comptes en base lors de la mise en service.
 
 ## Formulaire et API
 
@@ -74,7 +84,7 @@ Ces éléments ne sont pas inclus dans la démonstration et doivent être réali
 
 1. Base PostgreSQL et enregistrement durable : implémenter `saveInquiry()` dans `src/lib/inquiry-server.ts`.
 2. File de notifications email avec réessai (adresse d’envoi authentifiée, Reply-To du parent si valide).
-3. Comptes d’administration nominatifs, rôles (Administrateur, Admissions, Éditeur), authentification renforcée, actions de statut tracées en base, export CSV journalisé.
+3. Comptes d’administration gérés en base (création et changement de mot de passe depuis l’interface), rôle Éditeur, authentification renforcée, actions de statut tracées en base, export CSV journalisé.
 4. Limitation de débit et idempotence persistantes (les versions actuelles sont en mémoire).
 5. Validation par la direction : textes, devise développée, notice de confidentialité, durée de conservation, numéro principal, WhatsApp, email destinataire, domaine.
 6. Logo vectoriel officiel fourni par l’école, photographies approuvées avec autorisations de diffusion.

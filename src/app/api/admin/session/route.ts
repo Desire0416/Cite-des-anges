@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { rateLimited } from "@/lib/inquiry-server";
-import { SESSION_COOKIE, SESSION_MAX_AGE, adminConfigured, checkPassword, createSessionToken } from "@/lib/session";
+import { accountsConfigured, authenticate } from "@/lib/accounts";
+import { SESSION_COOKIE, SESSION_MAX_AGE, createSessionToken, sessionSecretConfigured } from "@/lib/session";
 
 function sameOrigin(request: Request) {
   const origin = request.headers.get("origin");
@@ -10,20 +11,24 @@ function sameOrigin(request: Request) {
 /** Connexion à l'aperçu de gestion. */
 export async function POST(request: Request) {
   if (!sameOrigin(request)) return NextResponse.json({ ok: false }, { status: 403 });
-  if (!adminConfigured()) return NextResponse.json({ ok: false, error: "not-configured" }, { status: 503 });
+  if (!accountsConfigured() || !sessionSecretConfigured()) {
+    return NextResponse.json({ ok: false, error: "not-configured" }, { status: 503 });
+  }
 
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
   if (rateLimited(`login:${ip}`)) return NextResponse.json({ ok: false, error: "rate-limit" }, { status: 429 });
 
-  const body = (await request.json().catch(() => null)) as { password?: unknown } | null;
+  const body = (await request.json().catch(() => null)) as { identifier?: unknown; password?: unknown } | null;
+  const identifier = typeof body?.identifier === "string" ? body.identifier.slice(0, 64) : "";
   const password = typeof body?.password === "string" ? body.password.slice(0, 200) : "";
 
-  if (!(await checkPassword(password))) {
+  const account = await authenticate(identifier, password);
+  if (!account) {
     return NextResponse.json({ ok: false, error: "invalid" }, { status: 401 });
   }
 
   const response = NextResponse.json({ ok: true });
-  response.cookies.set(SESSION_COOKIE, await createSessionToken({ name: "Compte de démonstration", role: "administrateur" }), {
+  response.cookies.set(SESSION_COOKIE, await createSessionToken(account), {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",

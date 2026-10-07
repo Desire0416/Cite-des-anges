@@ -4,7 +4,8 @@ import Link from "next/link";
 import { ArrowLeft, FlaskConical } from "lucide-react";
 import logo from "@/assets/logo.png";
 import { LoginForm } from "@/components/admin/LoginForm";
-import { adminConfigured } from "@/lib/session";
+import { accountsConfigured } from "@/lib/accounts";
+import { sessionSecretConfigured } from "@/lib/session";
 
 export const metadata: Metadata = { title: "Connexion" };
 
@@ -12,7 +13,7 @@ export const metadata: Metadata = { title: "Connexion" };
 export const dynamic = "force-dynamic";
 
 export default function ConnexionPage() {
-  const configured = adminConfigured();
+  const configured = accountsConfigured() && sessionSecretConfigured();
 
   return (
     <main className="relative isolate grid flex-1 place-items-center overflow-hidden px-5 py-16">
@@ -44,7 +45,7 @@ export default function ConnexionPage() {
             <LoginForm />
           ) : (
             <p className="mt-6 rounded-2xl bg-mist p-4 text-sm text-muted">
-              L’accès de démonstration n’est pas configuré sur ce serveur (variables <code>ADMIN_DEMO_PASSWORD</code> et{" "}
+              Aucun compte n’est configuré sur ce serveur (variables <code>ADMIN_ACCOUNTS</code> et{" "}
               <code>SESSION_SECRET</code>).
             </p>
           )}
