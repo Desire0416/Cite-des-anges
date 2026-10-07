@@ -44,6 +44,13 @@ export function sessionSecretConfigured() {
   return Boolean(getSecret());
 }
 
+/** État de la clé de session, sans jamais exposer sa valeur. */
+export function sessionSecretStatus(): "absente" | "trop courte" | "ok" {
+  const secret = process.env.SESSION_SECRET;
+  if (!secret) return "absente";
+  return getSecret() ? "ok" : "trop courte";
+}
+
 export async function createSessionToken(session: Omit<Session, "exp">) {
   const secret = getSecret();
   if (!secret) throw new Error("SESSION_SECRET manquant ou trop court.");

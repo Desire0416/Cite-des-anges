@@ -28,7 +28,13 @@ type Account = {
 
 function parseAccounts(raw: string | undefined): Account[] {
   if (!raw) return [];
-  return raw
+  // Tolère les erreurs de collage courantes : guillemets autour de la valeur
+  // ou nom de la variable recopié dans le champ « Value ».
+  const value = raw
+    .trim()
+    .replace(/^ADMIN_ACCOUNTS\s*=\s*/, "")
+    .replace(/^["']|["']$/g, "");
+  return value
     .split(/[;\n]/)
     .map((entry) => entry.trim())
     .filter(Boolean)
@@ -49,6 +55,12 @@ function parseAccounts(raw: string | undefined): Account[] {
 
 export function accountsConfigured() {
   return parseAccounts(process.env.ADMIN_ACCOUNTS).length > 0;
+}
+
+/** État de la configuration, sans jamais exposer de valeur. */
+export function accountsStatus(): "absente" | "illisible" | "ok" {
+  if (!process.env.ADMIN_ACCOUNTS?.trim()) return "absente";
+  return accountsConfigured() ? "ok" : "illisible";
 }
 
 /** Empreinte factice : le temps de réponse ne révèle pas si l'identifiant existe. */

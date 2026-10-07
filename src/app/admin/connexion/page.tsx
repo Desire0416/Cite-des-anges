@@ -4,8 +4,8 @@ import Link from "next/link";
 import { ArrowLeft, FlaskConical } from "lucide-react";
 import logo from "@/assets/logo.png";
 import { LoginForm } from "@/components/admin/LoginForm";
-import { accountsConfigured } from "@/lib/accounts";
-import { sessionSecretConfigured } from "@/lib/session";
+import { accountsStatus } from "@/lib/accounts";
+import { sessionSecretStatus } from "@/lib/session";
 
 export const metadata: Metadata = { title: "Connexion" };
 
@@ -13,7 +13,9 @@ export const metadata: Metadata = { title: "Connexion" };
 export const dynamic = "force-dynamic";
 
 export default function ConnexionPage() {
-  const configured = accountsConfigured() && sessionSecretConfigured();
+  const accounts = accountsStatus();
+  const secret = sessionSecretStatus();
+  const configured = accounts === "ok" && secret === "ok";
 
   return (
     <main className="relative isolate grid flex-1 place-items-center overflow-hidden px-5 py-16">
@@ -44,10 +46,18 @@ export default function ConnexionPage() {
           {configured ? (
             <LoginForm />
           ) : (
-            <p className="mt-6 rounded-2xl bg-mist p-4 text-sm text-muted">
-              Aucun compte n’est configuré sur ce serveur (variables <code>ADMIN_ACCOUNTS</code> et{" "}
-              <code>SESSION_SECRET</code>).
-            </p>
+            <div className="mt-6 rounded-2xl bg-mist p-4 text-sm text-muted">
+              <p className="font-semibold text-navy-800">La connexion n’est pas encore configurée sur ce serveur.</p>
+              <ul className="mt-3 space-y-1.5">
+                <li>
+                  <code>ADMIN_ACCOUNTS</code> : <StatusLabel value={accounts} />
+                </li>
+                <li>
+                  <code>SESSION_SECRET</code> : <StatusLabel value={secret} />
+                </li>
+              </ul>
+              <p className="mt-3">Après toute modification de ces variables sur Vercel, un redéploiement est nécessaire.</p>
+            </div>
           )}
         </div>
         <Link href="/" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-navy-800 hover:underline">
@@ -57,4 +67,8 @@ export default function ConnexionPage() {
       </div>
     </main>
   );
+}
+
+function StatusLabel({ value }: { value: string }) {
+  return <strong className={value === "ok" ? "text-[#3f7a1d]" : "text-danger-600"}>{value}</strong>;
 }
