@@ -17,14 +17,21 @@ const sections: LegalSection[] = [
     content: (
       <>
         <p>
-          Les informations transmises via ce site sont traitées par le {site.name}, situé à {site.address.full}.
+          Les informations transmises via ce site sont traitées par le {site.name} (RCCM {site.legal.rccm}), dont le
+          siège est situé à {site.address.official}.
         </p>
         <ul>
           <li>
             Email : <a href={`mailto:${site.email}`}>{site.email}</a>
           </li>
           <li>
-            Téléphone : <a href={site.phones[0].href}>{site.phones[0].label}</a>
+            Téléphone :{" "}
+            {site.phones.slice(0, 2).map((p, i) => (
+              <span key={p.href}>
+                {i > 0 && " · "}
+                <a href={p.href}>{p.label}</a>
+              </span>
+            ))}
           </li>
         </ul>
       </>
@@ -147,7 +154,7 @@ export default function ConfidentialitePage() {
       eyebrow="Données personnelles"
       title="Politique de confidentialité"
       intro={<p>Comment vos informations sont utilisées lorsque vous contactez l’école depuis ce site.</p>}
-      updated="6 octobre 2026"
+      updated="13 octobre 2026"
       sections={sections}
       demoNotice="Version de démonstration : le formulaire ne transmet aucune donnée à l’école. Cette notice sera validée par l’établissement avant toute collecte réelle."
     />

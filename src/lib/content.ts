@@ -1,8 +1,9 @@
 /**
- * Contenus éditoriaux. Toutes les réponses s'appuient sur les informations
- * de la brochure ; les détails non établis (frais, pièces, âges, classes)
+ * Contenus éditoriaux. Les réponses s'appuient sur la brochure et sur le
+ * règlement intérieur ; les détails non établis (frais, pièces, âges, classes)
  * sont renvoyés vers l'administration, sans valeur inventée.
  */
+import { schedule } from "./reglement";
 import { site } from "./site";
 
 export type Faq = { q: string; a: string };
@@ -34,17 +35,29 @@ export const faq = {
     q: "Puis-je demander un rendez-vous ?",
     a: "Oui, vous pouvez transmettre une demande de rendez-vous ; la date sera confirmée par l’école.",
   },
+  horaires: {
+    q: "Quels sont les horaires de classe ?",
+    a: `La semaine compte 4 jours de classe : lundi, mardi, jeudi et vendredi. ${schedule.rows
+      .map((r) => `${r.cycle} : ${r.morning.replace(/ – /g, " à ")} et ${r.afternoon.replace(/ – /g, " à ")}`)
+      .join(" ; ")}.`,
+  },
+  cantine: {
+    q: "L’école propose-t-elle une cantine ?",
+    a: "Oui. Un service de cantine facultatif est proposé à la pause déjeuner, avec une inscription pour un trimestre complet. L’administration vous en précise les modalités.",
+  },
   inclusif: {
     q: "Quelles sont les conditions d’accueil inclusif ?",
     a: "Échangez avec l’administration sur les possibilités et les conditions d’accueil de votre enfant. Une demande de rendez-vous est le meilleur point de départ.",
   },
 } satisfies Record<string, Faq>;
 
-export const homeFaq: Faq[] = [faq.cycles, faq.localisation, faq.frais, faq.inscription];
+export const homeFaq: Faq[] = [faq.cycles, faq.localisation, faq.horaires, faq.frais, faq.inscription];
 
 export const admissionsFaq: Faq[] = [
   faq.cycles,
   faq.localisation,
+  faq.horaires,
+  faq.cantine,
   faq.frais,
   faq.pieces,
   faq.inscription,
@@ -61,6 +74,10 @@ export const maternelleFaq: Faq[] = [
     q: "À partir de quel âge mon enfant peut-il être accueilli ?",
     a: "Les conditions d’âge et d’admission vous sont précisées par l’administration lors de votre échange.",
   },
+  {
+    q: "Quels sont les horaires de la maternelle ?",
+    a: "La classe a lieu le lundi, le mardi, le jeudi et le vendredi, de 8h00 à 11h30 et de 14h00 à 16h00. Les enfants arrivent au moins 15 minutes avant le début des cours.",
+  },
   faq.frais,
   {
     q: "Comment découvrir l’école avant de faire une demande ?",
@@ -76,6 +93,10 @@ export const primaireFaq: Faq[] = [
   {
     q: "Mon enfant est scolarisé dans une autre école : comment procéder ?",
     a: "Faites une première demande en indiquant le cycle primaire. L’administration vous précisera ensuite les démarches et les pièces nécessaires.",
+  },
+  {
+    q: "Quels sont les horaires du primaire ?",
+    a: "La classe a lieu le lundi, le mardi, le jeudi et le vendredi. Du CP1 au CE2 : 7h45 à 12h00 et 14h00 à 16h30. En CM1 et CM2 : 7h30 à 12h00 et 14h00 à 16h30.",
   },
   faq.frais,
   faq.inscription,
@@ -95,21 +116,6 @@ export const inclusifFaq: Faq[] = [
     a: "L’administration de l’école prend connaissance de votre demande et vous propose un échange.",
   },
 ];
-
-export const mottoValues = [
-  {
-    title: "Discipline",
-    text: "Un cadre de vie scolaire clair, qui aide chaque enfant à trouver ses repères.",
-  },
-  {
-    title: "Rigueur",
-    text: "Une attention constante portée au travail, à chaque étape des apprentissages.",
-  },
-  {
-    title: "Travail",
-    text: "L’implication de l’enfant dans ses apprentissages, jour après jour.",
-  },
-] as const;
 
 export const admissionSteps = [
   {

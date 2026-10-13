@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { ArrowUpRight, Mail, MapPin, Navigation, Phone, PhoneCall } from "lucide-react";
-import { LocationArt } from "@/components/art/LocationArt";
+import facade from "@/assets/ecole/facade-ecole.jpg";
 import { InquiryForm } from "@/components/forms/InquiryForm";
 import { PageHero } from "@/components/sections/PageHero";
 import { SectionHeading } from "@/components/sections/SectionHeading";
 import { ButtonLink } from "@/components/ui/Button";
+import { FramedPhoto } from "@/components/ui/FramedPhoto";
 import { WhatsAppIcon } from "@/components/ui/Icons";
 import { primaryPhone, site, whatsappHref } from "@/lib/site";
 
@@ -38,7 +39,16 @@ export default function ContactPage() {
             </ButtonLink>
           </>
         }
-        art={<LocationArt />}
+        art={
+          <FramedPhoto
+            src={facade}
+            alt="Façade du Groupe Scolaire La Cité des Anges : bâtiment à étage orange et bleu, décoré de fresques colorées"
+            addressBadge
+            priority
+            sizes="(max-width: 1024px) 100vw, 480px"
+            className="mx-auto max-w-[32rem] pb-6"
+          />
+        }
       />
 
       {/* Coordonnées */}
@@ -56,8 +66,8 @@ export default function ContactPage() {
                   </span>
                   <h3 className="text-2xl font-extrabold">Par téléphone</h3>
                 </div>
-                <ul className="mt-7 grid gap-3 sm:grid-cols-3">
-                  {site.phones.map((p, i) => (
+                <ul className="mt-7 grid gap-3 sm:grid-cols-2">
+                  {site.phones.map((p) => (
                     <li key={p.href}>
                       <a
                         href={p.href}
@@ -65,7 +75,7 @@ export default function ContactPage() {
                         data-track="phone_click"
                       >
                         <span className="font-display text-xs font-extrabold uppercase tracking-[0.14em] text-muted">
-                          {`Numéro ${i + 1}`}
+                          {p.role}
                         </span>
                         <span className="font-display text-lg font-extrabold text-navy-800">{p.label}</span>
                         <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-cyan-700">
@@ -79,27 +89,60 @@ export default function ContactPage() {
               </div>
             </div>
 
-            {/* Email */}
-            <div className="reveal" style={{ "--d": "100ms" } as React.CSSProperties}>
-              <a
-                href={`mailto:${site.email}`}
-                className="card card-hover group flex h-full flex-col justify-between gap-8 p-7 sm:p-9"
-              >
-                <span className="flex items-center gap-4">
-                  <span className="grid size-12 place-items-center rounded-2xl bg-navy-800 text-white">
-                    <Mail className="size-6" aria-hidden />
+            {/* Email et rendez-vous, empilés */}
+            <div className="grid gap-5">
+              {/* Email */}
+              <div className="reveal" style={{ "--d": "100ms" } as React.CSSProperties}>
+                <a
+                  href={`mailto:${site.email}`}
+                  className="card card-hover group flex h-full flex-col justify-between gap-8 p-7 sm:p-9"
+                >
+                  <span className="flex items-center gap-4">
+                    <span className="grid size-12 place-items-center rounded-2xl bg-navy-800 text-white">
+                      <Mail className="size-6" aria-hidden />
+                    </span>
+                    <span className="font-display text-2xl font-extrabold text-navy-800">Par email</span>
                   </span>
-                  <span className="font-display text-2xl font-extrabold text-navy-800">Par email</span>
-                </span>
-                <span>
-                  <span className="block break-all font-display text-lg font-extrabold text-navy-800">{site.email}</span>
-                  <span className="mt-2 block text-sm text-muted">Le lien ouvre votre logiciel de messagerie.</span>
-                </span>
-              </a>
+                  <span>
+                    <span className="block break-all font-display text-lg font-extrabold text-navy-800">{site.email}</span>
+                    <span className="mt-2 block text-sm text-muted">Le lien ouvre votre logiciel de messagerie.</span>
+                  </span>
+                </a>
+              </div>
+
+              {/* WhatsApp (après confirmation du numéro) ou rendez-vous */}
+              <div className="reveal" style={{ "--d": "160ms" } as React.CSSProperties}>
+                {wa ? (
+                  <a href={wa} className="card card-hover flex h-full flex-col justify-between gap-8 p-7 sm:p-9" data-track="whatsapp_click">
+                    <span className="flex items-center gap-4">
+                      <span className="grid size-12 place-items-center rounded-2xl bg-leaf-500 text-white">
+                        <WhatsAppIcon className="size-6" />
+                      </span>
+                      <span className="font-display text-2xl font-extrabold text-navy-800">WhatsApp</span>
+                    </span>
+                    <span className="text-sm text-muted">Écrire à l’école sur WhatsApp</span>
+                  </a>
+                ) : (
+                  <a
+                    href="#rendez-vous"
+                    className="group relative flex h-full flex-col justify-between gap-8 overflow-hidden rounded-3xl bg-navy-800 p-7 text-white transition-shadow duration-500 hover:shadow-[var(--shadow-lift)] sm:p-9"
+                  >
+                    <span className="bg-dots-light absolute inset-0" aria-hidden />
+                    <span className="relative font-display text-xs font-extrabold uppercase tracking-[0.16em] text-cyan-300">Rendez-vous</span>
+                    <span className="relative">
+                      <span className="block font-display text-2xl font-extrabold">Rencontrer l’administration</span>
+                      <span className="mt-3 inline-flex items-center gap-1.5 font-display font-bold text-cyan-300">
+                        Faire une demande
+                        <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden />
+                      </span>
+                    </span>
+                  </a>
+                )}
+              </div>
             </div>
 
             {/* Adresse */}
-            <div className="reveal lg:col-span-2" style={{ "--d": "60ms" } as React.CSSProperties}>
+            <div className="reveal lg:col-span-3" style={{ "--d": "60ms" } as React.CSSProperties}>
               <div className="card flex h-full flex-col gap-6 p-7 sm:flex-row sm:items-center sm:justify-between sm:p-9">
                 <div className="flex items-start gap-4">
                   <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-orange-500 text-navy-900">
@@ -108,7 +151,9 @@ export default function ContactPage() {
                   <div>
                     <h3 className="text-2xl font-extrabold">Adresse</h3>
                     <p className="mt-2 text-lg font-semibold text-navy-800">{site.address.line}</p>
-                    <p className="text-muted">{site.address.landmark}</p>
+                    <p className="text-muted">
+                      {site.address.commune}, {site.address.city} · {site.address.landmark}
+                    </p>
                   </div>
                 </div>
                 {site.directionsUrl && (
@@ -119,35 +164,6 @@ export default function ContactPage() {
               </div>
             </div>
 
-            {/* WhatsApp (après confirmation du numéro) ou rendez-vous */}
-            <div className="reveal" style={{ "--d": "160ms" } as React.CSSProperties}>
-              {wa ? (
-                <a href={wa} className="card card-hover flex h-full flex-col justify-between gap-8 p-7 sm:p-9" data-track="whatsapp_click">
-                  <span className="flex items-center gap-4">
-                    <span className="grid size-12 place-items-center rounded-2xl bg-leaf-500 text-white">
-                      <WhatsAppIcon className="size-6" />
-                    </span>
-                    <span className="font-display text-2xl font-extrabold text-navy-800">WhatsApp</span>
-                  </span>
-                  <span className="text-sm text-muted">Écrire à l’école sur WhatsApp</span>
-                </a>
-              ) : (
-                <a
-                  href="#rendez-vous"
-                  className="group relative flex h-full flex-col justify-between gap-8 overflow-hidden rounded-3xl bg-navy-800 p-7 text-white transition-shadow duration-500 hover:shadow-[var(--shadow-lift)] sm:p-9"
-                >
-                  <span className="bg-dots-light absolute inset-0" aria-hidden />
-                  <span className="relative font-display text-xs font-extrabold uppercase tracking-[0.16em] text-cyan-300">Rendez-vous</span>
-                  <span className="relative">
-                    <span className="block font-display text-2xl font-extrabold">Rencontrer l’administration</span>
-                    <span className="mt-3 inline-flex items-center gap-1.5 font-display font-bold text-cyan-300">
-                      Faire une demande
-                      <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden />
-                    </span>
-                  </span>
-                </a>
-              )}
-            </div>
           </div>
         </div>
       </section>

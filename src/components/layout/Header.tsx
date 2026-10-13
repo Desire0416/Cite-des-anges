@@ -3,13 +3,27 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowRight, BookOpen, ChevronDown, Mail, Menu, Phone, Shapes, X } from "lucide-react";
+import { ArrowRight, BookOpen, ChevronDown, Clock, Mail, Menu, Phone, School, Shapes, X } from "lucide-react";
 import { LogoLockup } from "@/components/ui/Logo";
 import { MottoLine } from "@/components/ui/Icons";
 import { ctaLabel, nav, primaryPhone, site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
-const cycleIcons = { "/maternelle": Shapes, "/primaire": BookOpen } as const;
+const menuIcons = {
+  school: { Icon: School, tile: "" },
+  clock: { Icon: Clock, tile: "bg-navy-50 text-navy-800" },
+  shapes: { Icon: Shapes, tile: "" },
+  book: { Icon: BookOpen, tile: "bg-orange-50 text-orange-700" },
+} as const;
+
+type MobileLink = { href: string; label: string; kicker?: string };
+
+/** Liens à plat pour le menu mobile, avec un index continu pour l'animation. */
+const mobileLinks: MobileLink[] = nav.flatMap((item): MobileLink[] =>
+  "children" in item
+    ? item.children.map((child) => ({ href: child.href, label: child.label, kicker: item.kicker }))
+    : [{ href: item.href, label: item.label }],
+);
 
 function isActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
@@ -19,18 +33,19 @@ export function Header() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [cyclesOpen, setCyclesOpen] = useState(false);
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [prevPath, setPrevPath] = useState(pathname);
   const hoverTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const openedByHover = useRef(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const dropdownRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   // Ferme les menus à chaque changement de page
   if (prevPath !== pathname) {
     setPrevPath(pathname);
     setMenuOpen(false);
-    setCyclesOpen(false);
+    setOpenMenu(null);
   }
 
   useEffect(() => {
@@ -60,26 +75,36 @@ export function Header() {
   }, [menuOpen, closeMenu]);
 
   useEffect(() => {
-    if (!cyclesOpen) return;
+    if (!openMenu) return;
     const onPointer = (e: PointerEvent) => {
-      if (!dropdownRef.current?.contains(e.target as Node)) setCyclesOpen(false);
+      if (!dropdownRefs.current[openMenu]?.contains(e.target as Node)) setOpenMenu(null);
     };
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setCyclesOpen(false);
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpenMenu(null);
     document.addEventListener("pointerdown", onPointer);
     window.addEventListener("keydown", onKey);
     return () => {
       document.removeEventListener("pointerdown", onPointer);
       window.removeEventListener("keydown", onKey);
     };
-  }, [cyclesOpen]);
+  }, [openMenu]);
 
-  const openOnHover = () => {
+  const openOnHover = (label: string) => {
     clearTimeout(hoverTimer.current);
-    setCyclesOpen(true);
+    if (openMenu !== label) openedByHover.current = true;
+    setOpenMenu(label);
+  };
+  // Un clic après un survol garde le menu ouvert ; un second clic (ou Entrée) le referme
+  const toggleOnClick = (label: string) => {
+    if (openMenu === label && !openedByHover.current) {
+      setOpenMenu(null);
+    } else {
+      openedByHover.current = false;
+      setOpenMenu(label);
+    }
   };
   const closeOnLeave = () => {
     clearTimeout(hoverTimer.current);
-    hoverTimer.current = setTimeout(() => setCyclesOpen(false), 160);
+    hoverTimer.current = setTimeout(() => setOpenMenu(null), 160);
   };
 
   return (
@@ -102,20 +127,24 @@ export function Header() {
 
           <nav aria-label="Navigation principale" className="hidden xl:block">
             <ul className="flex items-center gap-0.5">
-              {nav.map((item) =>
+              {nav.map((item, index) =>
                 "children" in item ? (
                   <li
                     key={item.label}
                     className="relative"
-                    onMouseEnter={openOnHover}
+                    onMouseEnter={() => openOnHover(item.label)}
                     onMouseLeave={closeOnLeave}
                   >
-                    <div ref={dropdownRef}>
+                    <div
+                      ref={(el) => {
+                        dropdownRefs.current[item.label] = el;
+                      }}
+                    >
                       <button
                         type="button"
-                        aria-expanded={cyclesOpen}
-                        aria-controls="menu-cycles"
-                        onClick={() => setCyclesOpen((v) => !v)}
+                        aria-expanded={openMenu === item.label}
+                        aria-controls={`menu-${index}`}
+                        onClick={() => toggleOnClick(item.label)}
                         className={cn(
                           "nav-link inline-flex items-center gap-1.5 rounded-full px-3.5 py-2.5 font-display text-[0.94rem] font-semibold transition-colors",
                           item.children.some((c) => isActive(pathname, c.href))
@@ -126,20 +155,20 @@ export function Header() {
                       >
                         {item.label}
                         <ChevronDown
-                          className={cn("size-4 transition-transform duration-300", cyclesOpen && "rotate-180")}
+                          className={cn("size-4 transition-transform duration-300", openMenu === item.label && "rotate-180")}
                           aria-hidden
                         />
                       </button>
                       <div
-                        id="menu-cycles"
+                        id={`menu-${index}`}
                         className={cn(
                           "absolute left-1/2 top-full z-10 w-[22rem] -translate-x-1/2 pt-3",
-                          cyclesOpen ? "block" : "hidden",
+                          openMenu === item.label ? "block" : "hidden",
                         )}
                       >
                         <ul className="animate-[slide-down_0.35s_var(--ease-out-soft)] rounded-3xl border border-line bg-white p-2.5 shadow-[var(--shadow-lift)]">
                           {item.children.map((child) => {
-                            const Icon = cycleIcons[child.href];
+                            const { Icon, tile } = menuIcons[child.icon];
                             return (
                               <li key={child.href}>
                                 <Link
@@ -147,12 +176,7 @@ export function Header() {
                                   className="group flex items-start gap-4 rounded-2xl p-3.5 transition-colors hover:bg-mist"
                                   {...(isActive(pathname, child.href) ? { "aria-current": "page" as const } : {})}
                                 >
-                                  <span
-                                    className={cn(
-                                      "icon-tile size-11 rounded-xl",
-                                      child.href === "/primaire" && "bg-orange-50 text-orange-700",
-                                    )}
-                                  >
+                                  <span className={cn("icon-tile size-11 rounded-xl", tile)}>
                                     <Icon className="size-5" aria-hidden />
                                   </span>
                                   <span>
@@ -259,16 +283,14 @@ export function Header() {
 
           <nav aria-label="Navigation mobile" className="flex-1 px-5 py-6 sm:px-6">
             <ul className="space-y-1">
-              {nav.map((item, i) => {
-                const links = "children" in item ? item.children : [item];
-                return links.map((link, j) => (
+              {mobileLinks.map((link, i) => (
                   <li
                     key={link.href}
                     className={cn(
                       "transition-[opacity,transform] duration-500 ease-[var(--ease-out-soft)]",
                       menuOpen ? "translate-x-0 opacity-100" : "translate-x-6 opacity-0",
                     )}
-                    style={{ transitionDelay: menuOpen ? `${120 + (i + j) * 55}ms` : "0ms" }}
+                    style={{ transitionDelay: menuOpen ? `${120 + i * 50}ms` : "0ms" }}
                   >
                     <Link
                       href={link.href}
@@ -279,9 +301,9 @@ export function Header() {
                       {...(isActive(pathname, link.href) ? { "aria-current": "page" as const } : {})}
                     >
                       <span className="flex items-center gap-3">
-                        {"children" in item && (
+                        {link.kicker && (
                           <span className="font-display text-xs font-extrabold uppercase tracking-[0.14em] text-cyan-700">
-                            Cycle
+                            {link.kicker}
                           </span>
                         )}
                         {link.label}
@@ -289,8 +311,7 @@ export function Header() {
                       <ArrowRight className="size-5 text-navy-300" aria-hidden />
                     </Link>
                   </li>
-                ));
-              })}
+                ))}
             </ul>
 
             <div

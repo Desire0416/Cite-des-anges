@@ -86,6 +86,10 @@ export default function AccueilInclusifPage() {
                   différents, les possibilités et les conditions d’accueil se discutent directement avec l’administration.
                 </p>
                 <p className="mt-4">
+                  Le règlement intérieur de l’établissement inscrit d’ailleurs parmi ses missions de « favoriser
+                  l’inclusion scolaire des élèves ayant des besoins éducatifs particuliers ».
+                </p>
+                <p className="mt-4">
                   La demande de rendez-vous est le point de départ : elle vous permet de présenter votre situation et de
                   poser vos questions, sans engagement.
                 </p>

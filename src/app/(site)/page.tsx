@@ -181,7 +181,7 @@ export default function HomePage() {
       <FaqSection items={homeFaq} className="bg-mist" more={{ href: "/admissions#questions", label: "Toutes les questions" }} />
 
       {/* 9. Contact final */}
-      <ContactBlock />
+      <ContactBlock photo />
     </>
   );
 }

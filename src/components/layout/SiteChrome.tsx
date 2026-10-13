@@ -3,9 +3,10 @@ import { AnalyticsListener, PageTransition, RevealObserver } from "./Effects";
 import { Footer } from "./Footer";
 import { Header } from "./Header";
 import { MobileActionBar } from "./MobileActionBar";
+import facade from "@/assets/ecole/facade-ecole.jpg";
 import { site } from "@/lib/site";
 
-/** Données structurées limitées aux informations confirmées par la brochure. */
+/** Données structurées limitées aux informations confirmées (brochure et règlement intérieur). */
 const schoolJsonLd = {
   "@context": "https://schema.org",
   "@type": "School",
@@ -15,13 +16,18 @@ const schoolJsonLd = {
   url: site.url,
   logo: new URL("/brand/logo-og.png", site.url).toString(),
   email: site.email,
+  image: new URL(facade.src, site.url).toString(),
   telephone: site.phones.map((p) => p.href.replace("tel:", "")),
   address: {
     "@type": "PostalAddress",
-    streetAddress: `Cité Gestoci, ${site.address.landmark}`,
-    addressLocality: site.address.locality,
+    streetAddress: `${site.address.commune} ${site.address.line}, ${site.address.landmark}`,
+    addressLocality: site.address.city,
     addressCountry: site.address.country,
   },
+  identifier: [
+    { "@type": "PropertyValue", propertyID: "RCCM", value: site.legal.rccm },
+    { "@type": "PropertyValue", propertyID: "NCC", value: site.legal.ncc },
+  ],
 };
 
 export function SiteChrome({ children }: { children: React.ReactNode }) {

@@ -5,10 +5,12 @@ import { CycleFrame } from "@/components/art/FrameArt";
 import { TrackView } from "@/components/layout/Effects";
 import { ButtonLink } from "@/components/ui/Button";
 import type { Faq } from "@/lib/content";
+import { scheduleFor } from "@/lib/reglement";
 import { primaryPhone, site } from "@/lib/site";
 import { ContactBlock } from "./ContactBlock";
 import { FaqSection } from "./FaqSection";
 import { PageHero } from "./PageHero";
+import { ScheduleTable } from "./Schedule";
 import { SectionHeading } from "./SectionHeading";
 
 type CyclePageProps = {
@@ -70,7 +72,7 @@ export function CyclePage({ cycle, title, intro, ctaLabel, presentation, topics,
           </>
         }
         art={
-          <CycleFrame label={`${label} · ${site.address.locality}`} tone={accent}>
+          <CycleFrame label={`${label} · ${site.address.area}`} tone={accent}>
             <Art />
           </CycleFrame>
         }
@@ -109,6 +111,25 @@ export function CyclePage({ cycle, title, intro, ctaLabel, presentation, topics,
                 </li>
               ))}
             </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* Horaires du cycle (règlement intérieur, article 1) */}
+      <section className="section pt-0 lg:pt-0" aria-labelledby="cycle-horaires">
+        <div className="container-site grid items-center gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
+          <SectionHeading
+            id="cycle-horaires"
+            eyebrow="Horaires"
+            title={cycle === "maternelle" ? "Les horaires de la maternelle" : "Les horaires du primaire"}
+            text="Les cours ont lieu le lundi, le mardi, le jeudi et le vendredi. Les élèves arrivent au moins 15 minutes avant le début des cours ; ils sont accueillis au portail."
+          />
+          <div className="reveal" style={{ "--d": "100ms" } as React.CSSProperties}>
+            <ScheduleTable rows={scheduleFor(cycle)} />
+            <Link href="/infos-pratiques" className="link-arrow mt-6">
+              Horaires et règles de vie
+              <ArrowRight className="size-4" aria-hidden />
+            </Link>
           </div>
         </div>
       </section>

@@ -1,6 +1,7 @@
-import { BookOpenCheck, Compass, Ruler } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, BookOpenCheck, Compass, Ruler } from "lucide-react";
 import { LaurelBranch, Stars } from "@/components/ui/Icons";
-import { mottoValues } from "@/lib/content";
+import { mottoIntro, mottoValues } from "@/lib/reglement";
 import { SectionHeading } from "./SectionHeading";
 
 const icons = [Compass, Ruler, BookOpenCheck];
@@ -35,7 +36,7 @@ export function DeviseSection() {
                 Discipline, Rigueur, <span className="text-cyan-300">Travail</span>
               </>
             }
-            text="Inscrite sur l’emblème de l’établissement, la devise de La Cité des Anges exprime les valeurs qu’il met en avant au quotidien."
+            text={mottoIntro}
           />
           <div className="reveal flex items-end justify-start gap-3 lg:justify-end" style={{ "--d": "150ms" } as React.CSSProperties}>
             <LaurelBranch className="h-16 text-orange-500" />
@@ -66,6 +67,13 @@ export function DeviseSection() {
             );
           })}
         </ol>
+        <p className="reveal mt-10 flex flex-col gap-3 text-sm text-white/60 sm:flex-row sm:items-center sm:justify-between">
+          <span>Définitions extraites du règlement intérieur de l’établissement.</span>
+          <Link href="/infos-pratiques" className="group inline-flex items-center gap-1.5 font-display font-bold text-cyan-300 transition-colors hover:text-white">
+            Horaires et règlement
+            <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" aria-hidden />
+          </Link>
+        </p>
       </div>
     </section>
   );

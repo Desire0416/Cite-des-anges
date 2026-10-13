@@ -5,6 +5,7 @@ import { InquiryForm } from "@/components/forms/InquiryForm";
 import { AdmissionSteps } from "@/components/sections/AdmissionSteps";
 import { FaqSection } from "@/components/sections/FaqSection";
 import { PageHero } from "@/components/sections/PageHero";
+import { ReglementCard } from "@/components/sections/Schedule";
 import { SectionHeading } from "@/components/sections/SectionHeading";
 import { ButtonLink } from "@/components/ui/Button";
 import { admissionsFaq } from "@/lib/content";
@@ -76,6 +77,9 @@ export default function AdmissionsPage() {
               </li>
             ))}
           </ul>
+          <div className="reveal mt-6" style={{ "--d": "150ms" } as React.CSSProperties}>
+            <ReglementCard withLink />
+          </div>
         </div>
       </section>
 

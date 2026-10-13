@@ -5,6 +5,7 @@ import { posts, vieScolaireEnabled } from "@/lib/vie-scolaire";
 const routes = [
   { path: "/", priority: 1 },
   { path: "/ecole", priority: 0.8 },
+  { path: "/infos-pratiques", priority: 0.7 },
   { path: "/maternelle", priority: 0.9 },
   { path: "/primaire", priority: 0.9 },
   { path: "/accueil-inclusif", priority: 0.8 },

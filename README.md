@@ -26,7 +26,8 @@ npm run start
 | Route | Rôle |
 | --- | --- |
 | `/` | Accueil : premier écran, repères, cycles, devise, accueil inclusif, étapes, FAQ, contact |
-| `/ecole` | Identité, fiche de l’établissement, devise |
+| `/ecole` | Identité, photo de la façade, fiche de l’établissement, missions, devise |
+| `/infos-pratiques` | Horaires de classe, règles de vie et règlement intérieur à télécharger |
 | `/maternelle`, `/primaire` | Pages de cycle, lien vers le formulaire avec le cycle présélectionné |
 | `/accueil-inclusif` | Annonce factuelle, sujets d’échange, demande de rendez-vous |
 | `/admissions` | Parcours, formulaire (`#demande`), FAQ complète |
@@ -42,7 +43,10 @@ Le formulaire accepte des paramètres de présélection : `/admissions?cycle=mat
 | Quoi | Où |
 | --- | --- |
 | Coordonnées, campagne, WhatsApp, itinéraire | `src/lib/site.ts` (ou variables d’environnement) |
-| FAQ, devise, étapes d’admission | `src/lib/content.ts` |
+| FAQ, étapes d’admission | `src/lib/content.ts` |
+| Horaires, missions, devise, règles de vie (règlement intérieur) | `src/lib/reglement.ts` |
+| Règlement intérieur (PDF) | `public/documents/reglement-interieur-la-cite-des-anges.pdf` |
+| Photos de la façade | `src/assets/ecole/` |
 | Règles du formulaire | `src/lib/inquiry.ts` (partagé navigateur / serveur) |
 | Publications de vie scolaire | `src/lib/vie-scolaire.ts` + `NEXT_PUBLIC_FEATURE_VIE_SCOLAIRE=true` |
 | Logo | `src/assets/logo.png` (version détourée du JPEG fourni) |

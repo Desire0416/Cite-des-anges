@@ -1,7 +1,8 @@
 /**
  * Paramètres du site (entité SiteSettings du cahier des charges).
  *
- * Toutes les informations publiées proviennent de la brochure 2026–2027.
+ * Sources : brochure 2026–2027 et règlement intérieur de l'établissement
+ * (version 01 du 08/05/2026, document officiel de la direction).
  * Les éléments non confirmés (WhatsApp, point carte, vie scolaire) restent
  * désactivés tant que la direction ne les a pas validés.
  */
@@ -38,19 +39,41 @@ export const site = {
 
   cycles: ["Maternelle", "Primaire"] as const,
 
+  /** Adresse du siège telle qu'indiquée au règlement intérieur, avec le repère de la brochure. */
   address: {
-    line: "Angré, Cité Gestoci",
+    line: "Angré Bessikoi, Cité Gestoci",
     landmark: "en face du terrain de jeux",
-    full: "Angré, Cité Gestoci, en face du terrain de jeux",
-    locality: "Angré",
+    area: "Angré",
+    commune: "Cocody",
+    city: "Abidjan",
+    full: "Cocody Angré Bessikoi, Cité Gestoci, en face du terrain de jeux",
+    official: "Abidjan, Cocody Angré Bessikoi, Cité Gestoci",
     country: "CI",
   },
 
   phones: [
-    { label: "+225 07 02 29 09 00", href: "tel:+2250702290900", role: "Contact téléphonique" },
-    { label: "+225 01 03 32 41 88", href: "tel:+2250103324188", role: "Contact complémentaire" },
-    { label: "+225 07 48 10 22 28", href: "tel:+2250748102228", role: "Contact complémentaire" },
+    { label: "+225 07 02 29 09 00", href: "tel:+2250702290900", role: "Mobile" },
+    { label: "+225 27 22 53 07 86", href: "tel:+2252722530786", role: "Ligne fixe" },
+    { label: "+225 01 03 32 41 88", href: "tel:+2250103324188", role: "Mobile" },
+    { label: "+225 07 48 10 22 28", href: "tel:+2250748102228", role: "Mobile" },
   ] satisfies Phone[],
+
+  /** Identifiants légaux (en-tête du règlement intérieur). */
+  legal: {
+    rccm: "CI-ABJ-03-2025-12-02831",
+    idu: "2025-0034810K",
+    ncc: "2504300C",
+    director: "M. KOMAN Étienne",
+    directorRole: "Directeur Général",
+  },
+
+  /** Règlement intérieur téléchargeable (PDF officiel de l'établissement). */
+  reglement: {
+    href: "/documents/reglement-interieur-la-cite-des-anges.pdf",
+    version: "version 01 du 8 mai 2026",
+    pages: 6,
+    size: "924 Ko",
+  },
 
   email: "citange@citange.ci",
 
@@ -80,6 +103,7 @@ export const site = {
   },
 } as const;
 
+/** Numéro mis en avant pour les boutons « Appeler » (premier numéro de la brochure). */
 export const primaryPhone = site.phones[0];
 
 export const schoolYears = [site.campaign.year];
@@ -94,13 +118,22 @@ export function whatsappHref() {
 }
 
 export const nav = [
-  { href: "/ecole", label: "L’école" },
+  {
+    href: "/ecole",
+    label: "L’école",
+    kicker: "L’école",
+    children: [
+      { href: "/ecole", label: "Présentation", description: "Identité, missions et devise de l’établissement", icon: "school" },
+      { href: "/infos-pratiques", label: "Horaires et règlement", description: "Journée de classe et règles de vie", icon: "clock" },
+    ],
+  },
   {
     href: "/maternelle",
     label: "Nos cycles",
+    kicker: "Cycle",
     children: [
-      { href: "/maternelle", label: "Maternelle", description: "Sections, conditions d’accueil et démarches" },
-      { href: "/primaire", label: "Primaire", description: "Classes ouvertes et préparation de la demande" },
+      { href: "/maternelle", label: "Maternelle", description: "Sections, conditions d’accueil et démarches", icon: "shapes" },
+      { href: "/primaire", label: "Primaire", description: "Classes ouvertes et préparation de la demande", icon: "book" },
     ],
   },
   { href: "/accueil-inclusif", label: "Accueil inclusif" },

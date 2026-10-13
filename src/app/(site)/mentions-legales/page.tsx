@@ -16,9 +16,12 @@ const sections: LegalSection[] = [
     content: (
       <ul>
         <li>
-          <strong>{site.name}</strong>
+          <strong>{site.name}</strong>, établissement éducatif du préscolaire et du primaire
         </li>
-        <li>Adresse : {site.address.full}</li>
+        <li>Siège social et direction : {site.address.official}</li>
+        <li>N° RCCM : {site.legal.rccm}</li>
+        <li>IDU : {site.legal.idu}</li>
+        <li>NCC : {site.legal.ncc}</li>
         <li>
           Téléphone :{" "}
           {site.phones.map((p, i) => (
@@ -37,7 +40,11 @@ const sections: LegalSection[] = [
   {
     id: "publication",
     title: "Direction de la publication",
-    content: <p>La direction de l’établissement est responsable de la publication des contenus de ce site.</p>,
+    content: (
+      <p>
+        Directeur de la publication : {site.legal.director}, {site.legal.directorRole} de l’établissement.
+      </p>
+    ),
   },
   {
     id: "hebergement",
@@ -45,8 +52,8 @@ const sections: LegalSection[] = [
     content: (
       <p>
         {site.host ??
-          (site.demoMode
-            ? "Ce site est une version de démonstration. L’hébergeur de la version publique sera indiqué lors de sa mise en ligne."
+          (process.env.VERCEL
+            ? "Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis — vercel.com"
             : "L’hébergeur du site est indiqué par l’établissement.")}
       </p>
     ),
@@ -61,8 +68,8 @@ const sections: LegalSection[] = [
           autorisation est interdite.
         </p>
         <p>
-          Les illustrations du site sont des compositions graphiques inspirées de l’emblème : elles ne représentent ni
-          les locaux ni les élèves de l’établissement.
+          Les photographies de la façade appartiennent à l’établissement. Les illustrations du site sont des compositions
+          graphiques inspirées de l’emblème : elles ne représentent ni les locaux ni les élèves de l’établissement.
         </p>
       </>
     ),
@@ -97,7 +104,7 @@ export default function MentionsLegalesPage() {
       eyebrow="Informations légales"
       title="Mentions légales"
       intro={<p>Les informations relatives à l’éditeur et à l’utilisation de ce site.</p>}
-      updated="6 octobre 2026"
+      updated="13 octobre 2026"
       sections={sections}
     />
   );

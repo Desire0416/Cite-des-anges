@@ -10,6 +10,7 @@ const columns = [
     title: "L’établissement",
     links: [
       { href: "/ecole", label: "L’école" },
+      { href: "/infos-pratiques", label: "Horaires et règlement" },
       { href: "/maternelle", label: "Maternelle" },
       { href: "/primaire", label: "Primaire" },
       { href: "/accueil-inclusif", label: "Accueil inclusif" },
@@ -55,7 +56,7 @@ export function Footer() {
             </span>
           </Link>
           <p className="mt-6 max-w-xs leading-relaxed">
-            Maternelle et primaire à Angré, Cité Gestoci. Échangez avec l’administration sur les démarches d’inscription.
+            Maternelle et primaire à Angré Bessikoi, Cité Gestoci. Échangez avec l’administration sur les démarches d’inscription.
           </p>
           <MottoLine className="mt-6 font-display text-[0.78rem] font-extrabold uppercase tracking-[0.16em] text-white" />
         </div>
@@ -88,6 +89,8 @@ export function Footer() {
                 {site.address.line},
                 <br />
                 {site.address.landmark}
+                <br />
+                {site.address.commune}, {site.address.city}
               </span>
             </li>
             <li className="flex gap-3">
