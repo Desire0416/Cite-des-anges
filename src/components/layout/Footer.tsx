@@ -118,6 +118,13 @@ export function Footer() {
         <div className="container-site flex flex-col gap-4 py-6 text-sm text-white/55 md:flex-row md:items-center md:justify-between">
           <p>
             © {year} {site.name}
+            <span className="mt-1 block text-white/45">
+              Powered by <span className="font-semibold text-white/70">InnovaTech</span> de la EdTech{" "}
+              <span className="font-semibold text-white/70">EduWeb</span> ·{" "}
+              <a href="tel:+2250152633030" className="transition-colors hover:text-white">
+                (+225) 01 5263 3030
+              </a>
+            </span>
           </p>
           <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">
             <li>
