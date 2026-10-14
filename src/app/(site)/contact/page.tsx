@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { ArrowUpRight, Mail, MapPin, Navigation, Phone, PhoneCall } from "lucide-react";
 import facade from "@/assets/ecole/facade-ecole.jpg";
 import { InquiryForm } from "@/components/forms/InquiryForm";
@@ -7,6 +8,7 @@ import { SectionHeading } from "@/components/sections/SectionHeading";
 import { ButtonLink } from "@/components/ui/Button";
 import { FramedPhoto } from "@/components/ui/FramedPhoto";
 import { WhatsAppIcon } from "@/components/ui/Icons";
+import { entrancePhoto } from "@/lib/medias-ecole";
 import { primaryPhone, site, whatsappHref } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -156,11 +158,26 @@ export default function ContactPage() {
                     </p>
                   </div>
                 </div>
-                {site.directionsUrl && (
-                  <ButtonLink href={site.directionsUrl} variant="secondary" icon={Navigation} track="directions_click">
-                    Voir l’itinéraire
-                  </ButtonLink>
-                )}
+                <div className="flex flex-col gap-4 sm:items-end">
+                  <figure className="relative h-48 w-full overflow-hidden rounded-2xl border border-line sm:h-40 sm:w-72">
+                    <Image
+                      src={entrancePhoto.src}
+                      alt={entrancePhoto.alt}
+                      fill
+                      sizes="(max-width: 640px) 100vw, 288px"
+                      placeholder="blur"
+                      className="object-cover object-[50%_45%]"
+                    />
+                    <figcaption className="absolute bottom-2 left-2 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-navy-800 shadow-sm">
+                      L’entrée de l’école
+                    </figcaption>
+                  </figure>
+                  {site.directionsUrl && (
+                    <ButtonLink href={site.directionsUrl} variant="secondary" icon={Navigation} track="directions_click">
+                      Voir l’itinéraire
+                    </ButtonLink>
+                  )}
+                </div>
               </div>
             </div>
 

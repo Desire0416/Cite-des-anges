@@ -11,6 +11,7 @@ const columns = [
     links: [
       { href: "/ecole", label: "L’école" },
       { href: "/infos-pratiques", label: "Horaires et règlement" },
+      { href: "/vie-scolaire", label: "Vie scolaire" },
       { href: "/maternelle", label: "Maternelle" },
       { href: "/primaire", label: "Primaire" },
       { href: "/accueil-inclusif", label: "Accueil inclusif" },

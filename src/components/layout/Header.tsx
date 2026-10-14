@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowRight, BookOpen, ChevronDown, Clock, Mail, Menu, Phone, School, Shapes, X } from "lucide-react";
+import { ArrowRight, BookOpen, Camera, ChevronDown, Clock, Mail, Menu, Phone, School, Shapes, X } from "lucide-react";
 import { LogoLockup } from "@/components/ui/Logo";
 import { MottoLine } from "@/components/ui/Icons";
 import { ctaLabel, nav, primaryPhone, site } from "@/lib/site";
@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 const menuIcons = {
   school: { Icon: School, tile: "" },
   clock: { Icon: Clock, tile: "bg-navy-50 text-navy-800" },
+  camera: { Icon: Camera, tile: "bg-orange-50 text-orange-700" },
   shapes: { Icon: Shapes, tile: "" },
   book: { Icon: BookOpen, tile: "bg-orange-50 text-orange-700" },
 } as const;

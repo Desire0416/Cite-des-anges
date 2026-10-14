@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
-import { ArrowRight, BookOpen, HeartHandshake, Info, MapPin, Phone, Shapes } from "lucide-react";
+import { ArrowRight, BookOpen, HeartHandshake, Info, MapPin, Phone, Play, Shapes } from "lucide-react";
 import { HeroArt } from "@/components/art/HeroArt";
 import { AdmissionSteps } from "@/components/sections/AdmissionSteps";
 import { ContactBlock } from "@/components/sections/ContactBlock";
@@ -12,11 +13,33 @@ import { SectionHeading } from "@/components/sections/SectionHeading";
 import { ButtonLink } from "@/components/ui/Button";
 import { MottoLine } from "@/components/ui/Icons";
 import { homeFaq } from "@/lib/content";
+import { directorMessage } from "@/lib/medias-ecole";
 import { ctaLabel, primaryPhone, site } from "@/lib/site";
+import { moments, vieScolaireEnabled } from "@/lib/vie-scolaire";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
+
+type Teaser = { href: string; kicker: string; title: string; image: StaticImageData; alt: string; video?: boolean };
+
+const vieTeasers: Teaser[] = [
+  ...moments.map((m) => ({
+    href: `/vie-scolaire#${m.key}`,
+    kicker: m.kicker,
+    title: m.title,
+    image: m.photos[0].src,
+    alt: m.photos[0].alt,
+  })),
+  {
+    href: "/ecole#message-rentree",
+    kicker: `Vidéo · ${directorMessage.duration}`,
+    title: directorMessage.title,
+    image: directorMessage.poster,
+    alt: "",
+    video: true,
+  },
+];
 
 const reperes = [
   { href: "/maternelle", icon: Shapes, title: "Maternelle", text: "Découvrir le cycle", tile: "bg-cyan-50 text-cyan-700" },
@@ -175,7 +198,58 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 7. Vie scolaire : affichée uniquement avec des contenus authentiques approuvés */}
+      {/* 7. Vie scolaire : contenus authentiques publiés par l'établissement */}
+      {vieScolaireEnabled && (
+        <section className="section pt-0 lg:pt-0" aria-labelledby="vie-scolaire-title">
+          <div className="container-site">
+            <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
+              <SectionHeading
+                id="vie-scolaire-title"
+                eyebrow="Vie scolaire"
+                title="La vie de l’école en images"
+                text="Cérémonie de fin d’année, journée costumée, activités : quelques moments partagés par La Cité des Anges."
+              />
+              <div className="reveal shrink-0" style={{ "--d": "120ms" } as React.CSSProperties}>
+                <ButtonLink href="/vie-scolaire" variant="secondary">
+                  Découvrir la vie scolaire
+                </ButtonLink>
+              </div>
+            </div>
+            <ul className="mt-12 grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-4">
+              {vieTeasers.map((t, i) => (
+                <li key={t.href} className="reveal" style={{ "--d": `${i * 90}ms` } as React.CSSProperties}>
+                  <Link
+                    href={t.href}
+                    className="group relative block aspect-[3/4] overflow-hidden rounded-[1.5rem] border-[5px] border-white bg-navy-950 shadow-[var(--shadow-soft)] transition-shadow duration-500 hover:shadow-[var(--shadow-lift)]"
+                  >
+                    <Image
+                      src={t.image}
+                      alt={t.alt}
+                      fill
+                      sizes="(max-width: 1024px) 50vw, 280px"
+                      placeholder="blur"
+                      className="object-cover transition-transform duration-[1200ms] ease-[var(--ease-out-soft)] group-hover:scale-[1.05]"
+                    />
+                    <span className="absolute inset-0 bg-gradient-to-t from-navy-950/85 via-navy-950/15 to-transparent" aria-hidden />
+                    {t.video && (
+                      <span className="absolute left-1/2 top-[42%] grid size-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-white/95 text-navy-800 ring-8 ring-white/25 transition-transform duration-500 ease-[var(--ease-spring)] group-hover:scale-110" aria-hidden>
+                        <Play className="ml-0.5 size-6 fill-current" />
+                      </span>
+                    )}
+                    <span className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
+                      <span className="block text-xs font-semibold text-cyan-300">{t.kicker}</span>
+                      <span className="mt-1 flex items-end justify-between gap-2 font-display text-[0.98rem] font-extrabold leading-snug text-white sm:text-lg">
+                        {t.title}
+                        <ArrowRight className="mb-1 size-4 shrink-0 -translate-x-1 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100" aria-hidden />
+                      </span>
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
 
       {/* 8. Questions fréquentes */}
       <FaqSection items={homeFaq} className="bg-mist" more={{ href: "/admissions#questions", label: "Toutes les questions" }} />

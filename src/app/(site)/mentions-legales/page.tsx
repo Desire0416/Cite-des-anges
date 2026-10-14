@@ -68,8 +68,9 @@ const sections: LegalSection[] = [
           autorisation est interdite.
         </p>
         <p>
-          Les photographies de la façade appartiennent à l’établissement. Les illustrations du site sont des compositions
-          graphiques inspirées de l’emblème : elles ne représentent ni les locaux ni les élèves de l’établissement.
+          Les photographies et vidéos de l’école ont été publiées par l’établissement, qui en détient les droits ;
+          toute demande de retrait d’une image peut être adressée à l’école. Les illustrations du site sont des
+          compositions graphiques inspirées de l’emblème : elles ne représentent ni les locaux ni les élèves.
         </p>
       </>
     ),

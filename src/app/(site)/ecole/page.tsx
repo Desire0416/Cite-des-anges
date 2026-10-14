@@ -26,6 +26,8 @@ import { ReglementCard } from "@/components/sections/Schedule";
 import { SectionHeading } from "@/components/sections/SectionHeading";
 import { ButtonLink } from "@/components/ui/Button";
 import { FramedPhoto } from "@/components/ui/FramedPhoto";
+import { VideoPlayer } from "@/components/ui/VideoPlayer";
+import { directorMessage, teamPhoto } from "@/lib/medias-ecole";
 import { missions, schedule } from "@/lib/reglement";
 import { site } from "@/lib/site";
 
@@ -157,8 +159,43 @@ export default function EcolePage() {
         </div>
       </section>
 
+      {/* Équipe et message de rentrée */}
+      <section id="message-rentree" className="section scroll-mt-24 bg-mist" aria-labelledby="equipe-title">
+        <div className="container-site">
+          <SectionHeading
+            id="equipe-title"
+            eyebrow="L’équipe"
+            title="L’équipe et le message de rentrée"
+            text={`L’équipe de l’établissement réunie pour le lancement des inscriptions 2026-2027, et le message de rentrée de ${directorMessage.speaker}, cofondateur de l’école.`}
+          />
+          <div className="mt-12 grid items-start gap-10 lg:grid-cols-2 lg:gap-12">
+            <div className="reveal reveal-left">
+              <FramedPhoto
+                src={teamPhoto.src}
+                alt={teamPhoto.alt}
+                aspect="aspect-[3/2]"
+                caption={teamPhoto.caption}
+                sizes="(max-width: 1024px) 100vw, 560px"
+              />
+            </div>
+            <figure className="reveal reveal-right" style={{ "--d": "120ms" } as React.CSSProperties}>
+              <VideoPlayer
+                src={directorMessage.src}
+                poster={directorMessage.poster}
+                title={directorMessage.title}
+                duration={directorMessage.duration}
+                sizes="(max-width: 1024px) 100vw, 560px"
+              />
+              <figcaption className="mt-4 text-sm text-muted">
+                {directorMessage.title} · {directorMessage.speaker}, {directorMessage.role.charAt(0).toLowerCase() + directorMessage.role.slice(1)}.
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
       {/* Missions (règlement intérieur) */}
-      <section className="section bg-mist" aria-labelledby="missions-title">
+      <section className="section" aria-labelledby="missions-title">
         <div className="container-site">
           <SectionHeading
             id="missions-title"
@@ -188,11 +225,13 @@ export default function EcolePage() {
         </div>
       </section>
 
-      <CyclesSection
-        eyebrow="Les cycles"
-        title="Deux cycles dans un même établissement"
-        text="De la maternelle au primaire, chaque cycle dispose de sa page pour vous présenter les informations utiles et les démarches."
-      />
+      <div className="bg-mist">
+        <CyclesSection
+          eyebrow="Les cycles"
+          title="Deux cycles dans un même établissement"
+          text="De la maternelle au primaire, chaque cycle dispose de sa page pour vous présenter les informations utiles et les démarches."
+        />
+      </div>
 
       <DeviseSection />
 

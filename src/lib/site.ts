@@ -98,8 +98,8 @@ export const site = {
   host: clean(process.env.NEXT_PUBLIC_HOST_INFO),
 
   features: {
-    /** Vie scolaire : visible seulement avec des contenus authentiques approuvés. */
-    vieScolaire: clean(process.env.NEXT_PUBLIC_FEATURE_VIE_SCOLAIRE) === "true",
+    /** Vie scolaire : contenus authentiques publiés par l'établissement ; « false » pour la masquer. */
+    vieScolaire: clean(process.env.NEXT_PUBLIC_FEATURE_VIE_SCOLAIRE) !== "false",
   },
 } as const;
 
@@ -125,6 +125,7 @@ export const nav = [
     children: [
       { href: "/ecole", label: "Présentation", description: "Identité, missions et devise de l’établissement", icon: "school" },
       { href: "/infos-pratiques", label: "Horaires et règlement", description: "Journée de classe et règles de vie", icon: "clock" },
+      { href: "/vie-scolaire", label: "Vie scolaire", description: "Moments de l’école en photos et en vidéo", icon: "camera" },
     ],
   },
   {

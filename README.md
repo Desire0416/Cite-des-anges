@@ -33,7 +33,7 @@ npm run start
 | `/admissions` | Parcours, formulaire (`#demande`), FAQ complète |
 | `/contact` | Coordonnées, repère graphique, formulaire commun |
 | `/confidentialite`, `/mentions-legales` | Informations légales |
-| `/vie-scolaire` | Masquée (404, hors menu et sitemap) tant qu’aucun contenu réel n’est publié |
+| `/vie-scolaire` | Moments de l’école (Promotion Excellence 2025-2026, journée costumée, Kung-Fu) : sélection de photos et vidéo publiées par l’établissement |
 | `/admin` | Aperçu privé du suivi des demandes, **données fictives** |
 
 Le formulaire accepte des paramètres de présélection : `/admissions?cycle=maternelle&motif=rendez-vous#demande`.
@@ -48,7 +48,8 @@ Le formulaire accepte des paramètres de présélection : `/admissions?cycle=mat
 | Règlement intérieur (PDF) | `public/documents/reglement-interieur-la-cite-des-anges.pdf` |
 | Photos de la façade | `src/assets/ecole/` |
 | Règles du formulaire | `src/lib/inquiry.ts` (partagé navigateur / serveur) |
-| Publications de vie scolaire | `src/lib/vie-scolaire.ts` + `NEXT_PUBLIC_FEATURE_VIE_SCOLAIRE=true` |
+| Moments et médias de vie scolaire | `src/lib/vie-scolaire.ts` (photos dans `src/assets/vie-scolaire/`, vidéos dans `public/videos/`) |
+| Photo de l’équipe, message vidéo de rentrée | `src/lib/medias-ecole.ts` |
 | Logo | `src/assets/logo.png` (version détourée du JPEG fourni) |
 
 ### Variables d’environnement
